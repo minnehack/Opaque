@@ -1,0 +1,59 @@
+{
+  "Optum": {
+    "tiered": true,
+    "tier": "silver",
+    "blurb": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "logoURL": "https://minnehack.io/images/optum.png",
+  },
+  "Monster": {
+    "tiered": false,
+    "contributionType": "in kind",
+    "contributionDescription": "Monster will be providing free Monster energy drinks to all participants around dinner time on Saturday Jan 30 2021. \n \n Make sure to get yours while they last!",
+    "contributionValue": 500,
+    "logoURL": "https://i7.pngguru.com/preview/329/690/482/monster-energy-energy-drink-logo-clip-art-monster-inc.jpg",
+  },
+  "Metro Transit": {
+    "tiered": false,
+    "contributionType": "in kind",
+    "contributionDescription": "One thing MinneHack always tries to provide to it's participants is travel reimbursement. Metro Transit has made that a little easier for us by providing all hackers the option of taking one of their various transit lines to and from MinneHack for free!",
+    "contributionValue": 1000,
+    "logoURL": "https://metrocouncil.org/Transportation/Transportation/MetroTransitLogo.aspx"
+  },
+  "Sticker Mule": {
+    "tiered": false,
+    "contributionType": "in kind",
+    "contributionDescription": "Hackers love stickers, and Stickermule is making it possible for MinneHack to provide all our hackers with commemorative \"MinneHack 2020\" stickers! Make sure you come to the information booth in the back of the hall and pick one up!",
+    "contributionValue": 200,
+    "logoURL": "https://minnehack.io/images/stickermule.png",
+  },
+  "SPS Commerce": {
+    "tiered": true,
+    "tier": "gold",
+    "blurb": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "logoURL": "https://minnehack.io/images/sps.png",
+  },
+  "Ecolab": {
+    "tiered": true,
+    "tier": "gold",
+    "blurb": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "logoURL": "https://minnehack.io/images/ecolab.png",
+  },
+  "75F": {
+    "tiered": true,
+    "tier": "bronze",
+    "blurb": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "logoURL": "https://minnehack.io/images/75f.png",
+  },
+  "Best Buy": {
+    "tiered": true,
+    "tier": "bronze",
+    "blurb": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "logoURL": "https://minnehack.io/images/bestbuy.png",
+  },
+  "Cat Digital Division": {
+    "tiered": true,
+    "tier": "bronze",
+    "blurb": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "logoURL": "https://minnehack.io/images/cat.jpg",
+  }
+}
