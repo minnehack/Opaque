@@ -1,9 +1,9 @@
 table! {
-    registrants (id) {
-        id -> Unsigned<Bigint>,
+    registrants (db_identifier) {
+        db_identifier -> Unsigned<Bigint>,
         email -> Varchar,
-        firstName -> Varchar,
-        lastName -> Varchar,
+        first_name -> Varchar,
+        last_name -> Varchar,
         gender -> Varchar,
         phone -> Bigint,
         school -> Varchar,
@@ -11,6 +11,6 @@ table! {
         student -> Bool,
         coc -> Bool,
         mlhpriv -> Bool,
-        resume -> Nullable<Varchar>,
+        user_identifier -> Bigint,
     }
 }

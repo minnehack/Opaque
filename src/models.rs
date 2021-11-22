@@ -16,29 +16,15 @@
  */
 
 use crate::schema::registrants;
+use rocket::fs::TempFile;
+use rocket::data::Capped;
 
-#[derive(Queryable)]
-pub struct Registrant {
-    pub id: i32,
-    pub email: String,
-    pub firstName: String,
-    pub lastName: String,
-    pub gender: String,
-    pub phone: i64,
-    pub school: String,
-    pub accommodations: String,
-    pub student: bool,
-    pub coc: bool,
-    pub mlhpriv: bool,
-    pub resume: Option<String>
-}
-
-#[derive(FromForm, Insertable)]
+#[derive(Insertable)]
 #[table_name = "registrants"]
 pub struct InsertableRegistrant {
     pub email: String,
-    pub firstName: String,
-    pub lastName: String,
+    pub first_name: String,
+    pub last_name: String,
     pub gender: String,
     pub phone: i64,
     pub school: String,
@@ -46,6 +32,20 @@ pub struct InsertableRegistrant {
     pub student: bool,
     pub coc: bool,
     pub mlhpriv: bool,
-    pub resume: Option<String>
+    pub user_identifier: i64
+}
 
+#[derive(FromForm)]
+pub struct Registrant<'a> {
+    pub email: String,
+    pub first_name: String,
+    pub last_name: String,
+    pub gender: String,
+    pub phone: i64,
+    pub school: String,
+    pub accommodations: String,
+    pub student: bool,
+    pub coc: bool,
+    pub mlhpriv: bool,
+    pub resume: Option<Capped<TempFile<'a>>>
 }

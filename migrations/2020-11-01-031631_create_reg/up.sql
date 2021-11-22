@@ -1,8 +1,8 @@
 CREATE TABLE registrants (
-    id SERIAL PRIMARY KEY,
+    db_identifier SERIAL PRIMARY KEY,
     email VARCHAR (100) NOT NULL,
-    firstName VARCHAR (100) NOT NULL,
-    lastName VARCHAR (100) NOT NULL,
+    first_name VARCHAR (100) NOT NULL,
+    last_name VARCHAR (100) NOT NULL,
     gender VARCHAR (100) NOT NULL,
     phone BIGINT NOT NULL,
     school VARCHAR (100) NOT NULL,
@@ -10,5 +10,5 @@ CREATE TABLE registrants (
     student BOOLEAN NOT NULL,
     coc BOOLEAN NOT NULL,
     mlhpriv BOOLEAN NOT NULL,
-    resume VARCHAR (100)
+    user_identifier BIGINT NOT NULL
 )
