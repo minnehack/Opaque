@@ -1,21 +1,28 @@
 {
-  inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-21.05";
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+  };
 
-  outputs = { self, nixpkgs, flake-utils }:
-  flake-utils.lib.eachDefaultSystem
-  (system:
+  outputs = { self, nixpkgs, rust-overlay, flake-utils, ... }:
+  flake-utils.lib.eachDefaultSystem (system:
   let
-    pkgs = nixpkgs.legacyPackages.${system};
+    overlays = [ (import rust-overlay) ];
+    pkgs = import nixpkgs {
+      inherit system overlays;
+    };
   in {
-    devShell =
-      pkgs.mkShell {
-        buildInputs = [
-          pkgs.cargo
-          pkgs.rustc
-          pkgs.rustfmt
-        ];
-      };
-    });
-  }
+    devShell = pkgs.mkShell {
+      buildInputs = [
+        (pkgs.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default))
+        pkgs.diesel-cli
+        pkgs.mysql
+      ];
+      shellHook = ''
+        DATABASE_URL=mysql://root:root@localhost/mh_reg_test; export DATABASE_URL
+      '';
+    };
+  });
+}
 
