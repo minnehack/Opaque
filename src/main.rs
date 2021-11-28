@@ -94,7 +94,7 @@ async fn upload_file(file: Option<&mut Capped<TempFile<'_>>>, identifier: i64) -
 
             if stream.is_complete() {
 
-                stream.persist_to(identifier.to_string()).await?;
+                stream.persist_to("storage/".to_owned() + &identifier.to_string()).await?;
                 Ok(())
 
             } else {
