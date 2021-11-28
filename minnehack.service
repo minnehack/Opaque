@@ -6,7 +6,7 @@ Type=simple
 ExecStart=/root/Opaque/target/release/minnehack
 Restart=always
 User=minnehack
-WorkingDirectory=/home/minnehack
+WorkingDirectory=/root/Opaque
 
 [Install]
 WantedBy=multi-user.target
