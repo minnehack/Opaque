@@ -1,5 +1,7 @@
 [Unit]
 Description=Backend for Minnehack
+
+[Service]
 Type=simple
 ExecStart=/root/Opaque/target/release/minnehack
 Restart=always
