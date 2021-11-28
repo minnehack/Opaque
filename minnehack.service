@@ -3,11 +3,11 @@ Description=Backend for Minnehack
 
 [Service]
 Type=simple
-ExecStart=target/release/minnehack
+ExecStart=/home/minnehack/Opaque/target/release/minnehack
 Restart=always
 User=minnehack
 Group=minnehack
-WorkingDirectory=/root/Opaque/
+WorkingDirectory=/home/minnehack/Opaque
 
 [Install]
 WantedBy=multi-user.target

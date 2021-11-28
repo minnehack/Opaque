@@ -1,5 +1,5 @@
 [global.databases]
-mh_reg = { url = "mysql://root:root@localhost/mh_reg" }
+mh_reg = { url = "mysql://minnehack:minnehack@localhost/mh_reg" }
 
 [default]
 limits = { file = "101MiB" }
