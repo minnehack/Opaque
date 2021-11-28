@@ -1,2 +1,5 @@
 [global.databases]
 mh_reg_test = { url = "mysql://root:root@localhost/mh_reg_test" }
+
+[default]
+limits = { file = "101MiB" }

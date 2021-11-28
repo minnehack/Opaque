@@ -24,6 +24,7 @@ pub mod schema;
 #[macro_use] extern crate rocket_sync_db_pools;
 #[macro_use] extern crate diesel;
 
+use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
 
@@ -108,10 +109,12 @@ async fn upload_file(file: Option<&mut Capped<TempFile<'_>>>, identifier: i64) -
 #[launch]
 fn rocket() -> _ {
 
-    let config = rocket::Config::figment()
-        .merge(("limits", Limits::default().limit("file", 101_i32.mebibytes())));
+    match fs::create_dir_all("storage") {
+        Ok(()) => (),
+        Err(_) => panic!("Could not create storage directory!"),
+    };
 
-    rocket::custom(config)
+    rocket::build()
         .attach(RegDbConn::fairing())
         .mount("/", routes![register])
 }
