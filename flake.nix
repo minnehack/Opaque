@@ -21,7 +21,7 @@
         pkgs.mysql
       ];
       shellHook = ''
-        DATABASE_URL=mysql://root:root@localhost/mh_reg_test; export DATABASE_URL
+        DATABASE_URL=mysql://root:root@localhost/mh_reg; export DATABASE_URL
       '';
     };
 

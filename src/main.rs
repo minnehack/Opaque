@@ -32,7 +32,7 @@ use rand::Rng;
 
 use rocket::fs::TempFile;
 use rocket::form::Form;
-use rocket::data::{Capped, Limits, ToByteUnit};
+use rocket::data::{Capped};
 use rocket::response::Redirect;
 use rocket::response::status::BadRequest;
 
@@ -41,7 +41,7 @@ use crate::models::Registrant;
 use crate::models::InsertableRegistrant;
 use crate::schema::registrants::dsl::registrants;
 
-#[database("mh_reg_test")]
+#[database("mh_reg")]
 struct RegDbConn(diesel::MysqlConnection);
 
 #[post("/api/register", data = "<registrant>")]
