@@ -1,5 +1,5 @@
 [package]
-name = "mh21-backend"
+name = "minnehack"
 version = "0.1.0"
 authors = ["Hemant Gouni <hemant@hemantgouni.com>"]
 edition = "2018"

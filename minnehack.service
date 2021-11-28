@@ -1,0 +1,10 @@
+[Unit]
+Description=Backend for Minnehack
+Type=simple
+ExecStart=/root/Opaque/target/release/minnehack
+Restart=always
+User=minnehack
+WorkingDirectory=/home/minnehack
+
+[Install]
+WantedBy=multi-user.target
