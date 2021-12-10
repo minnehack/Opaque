@@ -28,7 +28,15 @@ pub struct InsertableRegistrant {
     pub gender: String,
     pub phone: i64,
     pub school: String,
+    pub tshirt: String,
+    pub driving: bool,
+    pub reimbursement: bool,
+    pub reimbursement_amount: i64,
+    pub reimbursement_desc: String,
+    pub reimbursement_strict: bool,
+    pub minor: bool,
     pub accommodations: String,
+    pub dietary_restrictions: String,
     pub student: bool,
     pub coc: bool,
     pub mlhpriv: bool,
@@ -43,9 +51,23 @@ pub struct Registrant<'a> {
     pub gender: String,
     pub phone: i64,
     pub school: String,
+    pub tshirt: String,
+    pub driving: bool,
+    pub reimbursement: bool,
+    #[field(name = "reimbursement-amount")]
+    pub reimbursement_amount: i64,
+    #[field(name = "reimbursement-desc")]
+    pub reimbursement_desc: String,
+    #[field(name = "reimbursement-strict")]
+    pub reimbursement_strict: bool,
+    pub minor: bool,
     pub accommodations: String,
+    pub dietary_restrictions: String,
+    #[field(validate = eq(true))]
     pub student: bool,
+    #[field(validate = eq(true))]
     pub coc: bool,
+    #[field(validate = eq(true))]
     pub mlhpriv: bool,
     pub resume: Option<Capped<TempFile<'a>>>
 }
