@@ -31,12 +31,12 @@ pub struct InsertableRegistrant {
     pub tshirt: String,
     pub driving: bool,
     pub reimbursement: bool,
-    pub reimbursement_amount: i64,
-    pub reimbursement_desc: String,
-    pub reimbursement_strict: bool,
+    pub reimbursement_amount: Option<i64>,
+    pub reimbursement_desc: Option<String>,
+    pub reimbursement_strict: Option<bool>,
     pub minor: bool,
-    pub accommodations: String,
-    pub dietary_restrictions: String,
+    pub accommodations: Option<String>,
+    pub dietary_restrictions: Option<String>,
     pub student: bool,
     pub coc: bool,
     pub mlhpriv: bool,
@@ -55,14 +55,14 @@ pub struct Registrant<'a> {
     pub driving: bool,
     pub reimbursement: bool,
     #[field(name = "reimbursement-amount")]
-    pub reimbursement_amount: i64,
+    pub reimbursement_amount: Option<i64>,
     #[field(name = "reimbursement-desc")]
-    pub reimbursement_desc: String,
+    pub reimbursement_desc: Option<String>,
     #[field(name = "reimbursement-strict")]
-    pub reimbursement_strict: bool,
+    pub reimbursement_strict: Option<bool>,
     pub minor: bool,
-    pub accommodations: String,
-    pub dietary_restrictions: String,
+    pub accommodations: Option<String>,
+    pub dietary_restrictions: Option<String>,
     #[field(validate = eq(true))]
     pub student: bool,
     #[field(validate = eq(true))]
