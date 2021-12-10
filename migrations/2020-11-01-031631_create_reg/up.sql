@@ -1,4 +1,4 @@
-CREATE TABLE registrants (
+CREATE TABLE registrants2021plusone (
 
     -- checkboxes are always NOT NULL; we always have a value for em!
 
