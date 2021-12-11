@@ -20,7 +20,7 @@ use rocket::fs::TempFile;
 use rocket::data::Capped;
 
 #[derive(Insertable)]
-#[table_name = "registrants2021plusone"]
+#[table_name = "registrants"]
 pub struct InsertableRegistrant {
     pub email: String,
     pub first_name: String,

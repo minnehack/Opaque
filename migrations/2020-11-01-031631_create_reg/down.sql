@@ -1,1 +1,1 @@
-DROP TABLE registrants2021plusone
+DROP TABLE registrants
