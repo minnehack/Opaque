@@ -37,9 +37,6 @@ pub struct InsertableRegistrant {
     pub minor: bool,
     pub accommodations: Option<String>,
     pub dietary_restrictions: Option<String>,
-    pub student: bool,
-    pub coc: bool,
-    pub mlhpriv: bool,
     pub user_identifier: i64
 }
 

@@ -85,9 +85,6 @@ async fn registrant_to_insertable(registrant: Form<Registrant<'_>>, user_identif
         minor: registrant.minor,
         accommodations: registrant.accommodations.clone(),
         dietary_restrictions: registrant.dietary_restrictions.clone(),
-        student: registrant.student,
-        coc: registrant.coc,
-        mlhpriv: registrant.mlhpriv,
         user_identifier: user_identifier
     }
 }

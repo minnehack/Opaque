@@ -25,8 +25,5 @@ CREATE TABLE registrants (
     accommodations TEXT,
     -- dietary restrictions may be NULL
     dietary_restrictions TEXT,
-    student BOOLEAN NOT NULL,
-    coc BOOLEAN NOT NULL,
-    mlhpriv BOOLEAN NOT NULL,
     user_identifier BIGINT NOT NULL
 )
