@@ -69,5 +69,7 @@ pub struct Registrant<'a> {
     pub coc: bool,
     #[field(validate = eq(true))]
     pub mlhpriv: bool,
+    #[field(validate = eq(true))]
+    pub covidack: bool,
     pub resume: Option<Capped<TempFile<'a>>>
 }
