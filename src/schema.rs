@@ -16,9 +16,10 @@ table! {
         minor -> Bool,
         accommodations -> Nullable<Text>,
         dietary_restrictions -> Nullable<Text>,
-        student -> Bool,
-        coc -> Bool,
-        mlhpriv -> Bool,
         user_identifier -> Bigint,
+        country -> Varchar,
+        level_of_study -> Varchar,
+        age -> Bigint,
+        mlh_mailing_list -> Bool,
     }
 }

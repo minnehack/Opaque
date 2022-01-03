@@ -27,16 +27,20 @@ pub struct InsertableRegistrant {
     pub last_name: String,
     pub gender: String,
     pub phone: i64,
+    pub country: String,
     pub school: String,
+    pub level_of_study: String,
+    pub minor: bool,
+    pub age: i64,
     pub tshirt: String,
     pub driving: bool,
     pub reimbursement: bool,
     pub reimbursement_amount: Option<i64>,
     pub reimbursement_desc: Option<String>,
     pub reimbursement_strict: Option<bool>,
-    pub minor: bool,
     pub accommodations: Option<String>,
     pub dietary_restrictions: Option<String>,
+    pub mlh_mailing_list: bool,
     pub user_identifier: i64
 }
 
@@ -47,7 +51,10 @@ pub struct Registrant<'a> {
     pub last_name: String,
     pub gender: String,
     pub phone: i64,
+    pub country: String,
     pub school: String,
+    pub level_of_study: String,
+    pub age: i64,
     pub tshirt: String,
     pub driving: bool,
     pub reimbursement: bool,
@@ -57,9 +64,10 @@ pub struct Registrant<'a> {
     pub reimbursement_desc: Option<String>,
     #[field(name = "reimbursement-strict")]
     pub reimbursement_strict: Option<bool>,
-    pub minor: bool,
     pub accommodations: Option<String>,
     pub dietary_restrictions: Option<String>,
+    pub mlh_mailing_list: bool,
+    pub resume: Option<Capped<TempFile<'a>>>,
     #[field(validate = eq(true))]
     pub student: bool,
     #[field(validate = eq(true))]
@@ -67,6 +75,5 @@ pub struct Registrant<'a> {
     #[field(validate = eq(true))]
     pub mlhpriv: bool,
     #[field(validate = eq(true))]
-    pub covidack: bool,
-    pub resume: Option<Capped<TempFile<'a>>>
+    pub covidack: bool
 }

@@ -69,22 +69,32 @@ async fn register(conn: RegDbConn, mut registrant: Form<Registrant<'_>>) ->
 async fn registrant_to_insertable(registrant: Form<Registrant<'_>>, user_identifier: i64) ->
     InsertableRegistrant {
 
+    let minor: bool = if registrant.age < 18 { 
+        true
+    } else {
+        false
+    };
+
     return InsertableRegistrant {
         email: registrant.email.clone(),
         first_name: registrant.first_name.clone(),
         last_name: registrant.last_name.clone(),
         gender: registrant.gender.clone(),
         phone: registrant.phone,
+        country: registrant.country.clone(),
         school: registrant.school.clone(),
+        level_of_study: registrant.level_of_study.clone(),
+        minor: minor,
+        age: registrant.age,
         tshirt: registrant.tshirt.clone(),
         driving: registrant.driving,
         reimbursement: registrant.reimbursement,
         reimbursement_amount: registrant.reimbursement_amount,
         reimbursement_desc: registrant.reimbursement_desc.clone(),
         reimbursement_strict: registrant.reimbursement_strict,
-        minor: registrant.minor,
         accommodations: registrant.accommodations.clone(),
         dietary_restrictions: registrant.dietary_restrictions.clone(),
+        mlh_mailing_list: registrant.mlh_mailing_list,
         user_identifier: user_identifier
     }
 }
