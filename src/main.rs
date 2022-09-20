@@ -32,7 +32,7 @@ use rand::Rng;
 
 use rocket::fs::TempFile;
 use rocket::form::Form;
-use rocket::data::{Capped};
+use rocket::data::Capped;
 use rocket::response::Redirect;
 use rocket::response::status::BadRequest;
 
