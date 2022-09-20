@@ -20,6 +20,7 @@
         pkgs.diesel-cli
         pkgs.mysql
         pkgs.rust-analyzer
+        pkgs.clippy
       ];
       shellHook = ''
         DATABASE_URL=mysql://root:root@localhost/mh_reg; export DATABASE_URL
