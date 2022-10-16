@@ -40,7 +40,6 @@ pub struct InsertableRegistrant {
     pub reimbursement_strict: Option<bool>,
     pub accommodations: Option<String>,
     pub dietary_restrictions: Option<String>,
-    pub mlh_mailing_list: bool,
     pub user_identifier: i64,
 }
 
@@ -66,14 +65,11 @@ pub struct Registrant<'a> {
     pub reimbursement_strict: Option<bool>,
     pub accommodations: Option<String>,
     pub dietary_restrictions: Option<String>,
-    pub mlh_mailing_list: bool,
     pub resume: Option<Capped<TempFile<'a>>>,
     #[field(validate = eq(true))]
     pub student: bool,
     #[field(validate = eq(true))]
     pub coc: bool,
-    #[field(validate = eq(true))]
-    pub mlhpriv: bool,
     #[field(validate = eq(true))]
     pub covidack: bool,
 }

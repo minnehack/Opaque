@@ -15,8 +15,6 @@
 * along with Opaque.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#![feature(proc_macro_hygiene, decl_macro)]
-
 pub mod models;
 pub mod schema;
 
@@ -30,6 +28,8 @@ extern crate diesel;
 use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
+
+use core::ops::Range;
 
 use rand::Rng;
 
@@ -51,60 +51,51 @@ struct RegDbConn(diesel::MysqlConnection);
 async fn register(
     conn: RegDbConn,
     mut registrant: Form<Registrant<'_>>,
-) -> Result<Redirect, BadRequest<String>> {
-    let user_identifier: i64 = rand::thread_rng().gen::<i64>();
+) -> Result<Redirect, BadRequest<&str>> {
+    let insertable_registrant = InsertableRegistrant::from(&registrant);
 
-    match upload_file(registrant.resume.as_mut(), user_identifier).await {
-        Err(_) => {
-            return Err(BadRequest(Some(
-                "Error while uploading resume!".to_string(),
-            )))
-        }
-        Ok(_) => (),
-    };
+    upload_file(
+        registrant.resume.as_mut(),
+        insertable_registrant.user_identifier,
+    )
+    .await
+    .map_err(|_| BadRequest(Some("Error uploading file")))?;
 
-    let insertable_registrant = registrant_to_insertable(registrant, user_identifier).await;
-
-    let db_response = conn
-        .run(move |c| {
-            diesel::insert_into(registrants)
-                .values(&insertable_registrant)
-                .execute(c)
-        })
-        .await;
-
-    match db_response {
-        Err(_) => Err(BadRequest(Some("error".to_string()))),
-        Ok(_) => Ok(Redirect::found("/register-success")),
-    }
+    // we could have pattern matched here, but it might look a bit uglier
+    conn.run(move |c| {
+        diesel::insert_into(registrants)
+            .values(insertable_registrant)
+            .execute(c)
+    })
+    .await
+    .map(|_| Redirect::found("/register-success"))
+    .map_err(|_| BadRequest(Some("Database error")))
 }
 
-async fn registrant_to_insertable(
-    registrant: Form<Registrant<'_>>,
-    user_identifier: i64,
-) -> InsertableRegistrant {
-    return InsertableRegistrant {
-        email: registrant.email.clone(),
-        first_name: registrant.first_name.clone(),
-        last_name: registrant.last_name.clone(),
-        gender: registrant.gender.clone(),
-        phone: registrant.phone,
-        country: registrant.country.clone(),
-        school: registrant.school.clone(),
-        level_of_study: registrant.level_of_study.clone(),
-        minor: registrant.age < 18,
-        age: registrant.age,
-        tshirt: registrant.tshirt.clone(),
-        driving: registrant.driving,
-        reimbursement: registrant.reimbursement,
-        reimbursement_amount: registrant.reimbursement_amount,
-        reimbursement_desc: registrant.reimbursement_desc.clone(),
-        reimbursement_strict: registrant.reimbursement_strict,
-        accommodations: registrant.accommodations.clone(),
-        dietary_restrictions: registrant.dietary_restrictions.clone(),
-        mlh_mailing_list: registrant.mlh_mailing_list,
-        user_identifier: user_identifier,
-    };
+impl From<&Form<Registrant<'_>>> for InsertableRegistrant {
+    fn from(registrant: &Form<Registrant>) -> Self {
+        return InsertableRegistrant {
+            email: registrant.email.clone(),
+            first_name: registrant.first_name.clone(),
+            last_name: registrant.last_name.clone(),
+            gender: registrant.gender.clone(),
+            phone: registrant.phone,
+            country: registrant.country.clone(),
+            school: registrant.school.clone(),
+            level_of_study: registrant.level_of_study.clone(),
+            minor: registrant.age < 18,
+            age: registrant.age,
+            tshirt: registrant.tshirt.clone(),
+            driving: registrant.driving,
+            reimbursement: registrant.reimbursement,
+            reimbursement_amount: registrant.reimbursement_amount,
+            reimbursement_desc: registrant.reimbursement_desc.clone(),
+            reimbursement_strict: registrant.reimbursement_strict,
+            accommodations: registrant.accommodations.clone(),
+            dietary_restrictions: registrant.dietary_restrictions.clone(),
+            user_identifier: rand::thread_rng().gen_range::<i64, Range<i64>>(0..1000000001),
+        };
+    }
 }
 
 async fn upload_file(
