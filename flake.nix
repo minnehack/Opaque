@@ -9,7 +9,14 @@
   let
     pkgs = nixpkgs.legacyPackages.${system};
   in {
-    devShell = pkgs.mkShell {
+    packages.default = pkgs.rustPlatform.buildRustPackage {
+      pname = "Opaque";
+      version = "0.1.0";
+      src = ./.;
+      cargoLock.lockFile = ./Cargo.lock;
+      nativeBuildInputs = [ pkgs.libmysqlclient.dev ];
+    };
+    devShells.default = pkgs.mkShell {
       buildInputs = [
         pkgs.rustc
         pkgs.cargo
@@ -20,8 +27,8 @@
         pkgs.rustfmt
       ];
       shellHook = ''
-        DATABASE_URL=mysql://root:root@localhost/mh_reg; export DATABASE_URL
-      '';
+        export DATABASE_URL=mysql://minnehack:minnehack@localhost/mh_reg_test
+        '';
     };
   });
 }

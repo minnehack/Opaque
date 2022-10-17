@@ -664,16 +664,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2a60c7ce501c71e03a9c9c0d35b861413ae925bd979cc7a4e30d060069aaac8d"
 
 [[package]]
-name = "minnehack"
-version = "0.1.0"
-dependencies = [
- "diesel",
- "rand",
- "rocket",
- "rocket_sync_db_pools",
-]
-
-[[package]]
 name = "mio"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -739,6 +729,16 @@ name = "once_cell"
 version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2f7254b99e31cad77da24b08ebf628882739a608578bb1bcdfc1f9c21260d7c0"
+
+[[package]]
+name = "opaque"
+version = "0.1.0"
+dependencies = [
+ "diesel",
+ "rand",
+ "rocket",
+ "rocket_sync_db_pools",
+]
 
 [[package]]
 name = "opaque-debug"

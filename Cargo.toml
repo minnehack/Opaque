@@ -1,17 +1,17 @@
 [package]
-name = "minnehack"
+name = "opaque"
 version = "0.1.0"
-authors = ["Hemant Gouni <hemant@hemantgouni.com>"]
+authors = [ "Hemant Sai Gouni <hemant@hemantgouni.com>" ]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 rocket = "0.5.0-rc.2"
-diesel = { version = "1.4.8", features = ["mysql"] }
+diesel = { version = "1.4.8", features = [ "mysql" ] }
 rand = "0.8.5"
 
 [dependencies.rocket_sync_db_pools]
 version = "0.1.0-rc.2"
 default-features = false
-features = ["diesel_mysql_pool"]
+features = [ "diesel_mysql_pool" ]

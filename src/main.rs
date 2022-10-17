@@ -29,20 +29,18 @@ use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
 
-use core::ops::Range;
-
-use rand::Rng;
-
 use rocket::data::Capped;
 use rocket::form::Form;
 use rocket::fs::TempFile;
 use rocket::response::status::BadRequest;
 use rocket::response::Redirect;
 
-use crate::diesel::RunQueryDsl;
 use crate::models::InsertableRegistrant;
 use crate::models::Registrant;
-use crate::schema::registrants::dsl::registrants;
+use crate::schema::registrants::dsl::*;
+
+use crate::diesel::RunQueryDsl;
+use diesel::query_dsl::QueryDsl;
 
 #[database("mh_reg")]
 struct RegDbConn(diesel::MysqlConnection);
@@ -55,8 +53,18 @@ async fn register(
     let insertable_registrant = InsertableRegistrant::from(&registrant);
 
     upload_file(
-        registrant.resume.as_mut(),
-        insertable_registrant.user_identifier,
+        &mut registrant.resume,
+        *conn
+            .run(|c| {
+                registrants
+                    .select(db_identifier)
+                    .order(db_identifier)
+                    .load(c)
+                    .map_err(|_| BadRequest(Some("Database error")))
+            })
+            .await?
+            .last()
+            .unwrap(),
     )
     .await
     .map_err(|_| BadRequest(Some("Error uploading file")))?;
@@ -64,7 +72,7 @@ async fn register(
     // we could have pattern matched here, but it might look a bit uglier
     conn.run(move |c| {
         diesel::insert_into(registrants)
-            .values(insertable_registrant)
+            .values(&insertable_registrant)
             .execute(c)
     })
     .await
@@ -72,54 +80,44 @@ async fn register(
     .map_err(|_| BadRequest(Some("Database error")))
 }
 
-impl From<&Form<Registrant<'_>>> for InsertableRegistrant {
-    fn from(registrant: &Form<Registrant>) -> Self {
+impl<'a> From<&Form<Registrant<'a>>> for InsertableRegistrant {
+    fn from(registrant: &Form<Registrant<'a>>) -> Self {
         return InsertableRegistrant {
-            email: registrant.email.clone(),
-            first_name: registrant.first_name.clone(),
-            last_name: registrant.last_name.clone(),
-            gender: registrant.gender.clone(),
+            email: registrant.email.to_string(),
+            first_name: registrant.first_name.to_string(),
+            last_name: registrant.last_name.to_string(),
+            gender: registrant.gender.to_string(),
             phone: registrant.phone,
-            country: registrant.country.clone(),
-            school: registrant.school.clone(),
-            level_of_study: registrant.level_of_study.clone(),
+            country: registrant.country.to_string(),
+            school: registrant.school.to_string(),
+            level_of_study: registrant.level_of_study.to_string(),
             minor: registrant.age < 18,
             age: registrant.age,
-            tshirt: registrant.tshirt.clone(),
+            tshirt: registrant.tshirt.to_string(),
             driving: registrant.driving,
             reimbursement: registrant.reimbursement,
             reimbursement_amount: registrant.reimbursement_amount,
-            reimbursement_desc: registrant.reimbursement_desc.clone(),
+            reimbursement_desc: registrant.reimbursement_desc.map(|str| str.to_string()),
             reimbursement_strict: registrant.reimbursement_strict,
-            accommodations: registrant.accommodations.clone(),
-            dietary_restrictions: registrant.dietary_restrictions.clone(),
-            user_identifier: rand::thread_rng().gen_range::<i64, Range<i64>>(0..1000000001),
+            accommodations: registrant.accommodations.map(|str| str.to_string()),
+            dietary_restrictions: registrant.dietary_restrictions.map(|str| str.to_string()),
         };
     }
 }
 
-async fn upload_file(
-    file: Option<&mut Capped<TempFile<'_>>>,
-    identifier: i64,
-) -> std::io::Result<()> {
-    match file {
-        None => Err(Error::new(
-            ErrorKind::InvalidInput,
-            "Unable to upload nonexistent file!",
-        )),
-        Some(stream) => {
-            if stream.is_complete() {
-                stream
-                    .persist_to("storage/".to_owned() + &identifier.to_string())
-                    .await?;
-                Ok(())
-            } else {
-                Err(Error::new(
-                    ErrorKind::InvalidData,
-                    "File exceeded maximum size!",
-                ))
-            }
-        }
+async fn upload_file(stream: &mut Capped<TempFile<'_>>, identifier: i64) -> std::io::Result<()> {
+    if stream.is_complete() && stream.len() > 0 {
+        stream
+            .persist_to(String::from("storage/") + &identifier.to_string())
+            .await?;
+        Ok(())
+    } else if stream.is_complete() {
+        Ok(())
+    } else {
+        Err(Error::new(
+            ErrorKind::InvalidData,
+            "File exceeded maximum size!",
+        ))
     }
 }
 
