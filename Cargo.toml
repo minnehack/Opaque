@@ -17,4 +17,4 @@ features = [ "sqlx_mysql" ]
 [dependencies.sqlx]
 version = "0.5"
 default-features = false
-features = [ "macros" ]
+features = [ "macros", "offline" ]

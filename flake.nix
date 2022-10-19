@@ -69,7 +69,7 @@
         pkgs.cargo
         pkgs.rust-analyzer
         pkgs.clippy
-        pkgs.diesel-cli
+        pkgs.sqlx-cli
         pkgs.mysql
         pkgs.rustfmt
       ];
