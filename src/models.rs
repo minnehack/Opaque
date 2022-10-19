@@ -17,7 +17,6 @@
 
 use rocket::data::Capped;
 use rocket::fs::TempFile;
-use rocket::form::Form;
 
 use rocket_db_pools::sqlx::FromRow;
 

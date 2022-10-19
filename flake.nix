@@ -92,7 +92,7 @@
 
         export DATABASE_URL=mysql://mysql:mysql@127.0.0.1/mh_reg
 
-        ln -sf $(pwd)/hooks $(pwd)/.git/hooks
+        ln -sf $(pwd)/hooks/pre-commit $(pwd)/.git/hooks/pre-commit
         '';
     };
   });
