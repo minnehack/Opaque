@@ -45,7 +45,8 @@ async fn register(
     mut registrant: Form<Registrant<'_>>,
 ) -> Result<Redirect, BadRequest<&str>> {
     let identifier: u64 = sqlx::query!(
-        r#"INSERT INTO registrants
+        r#"
+        INSERT INTO registrants
             (email,
              first_name,
              last_name,
@@ -67,7 +68,8 @@ async fn register(
         VALUES
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING
-            id"#,
+            id
+        "#,
         registrant.email,
         registrant.first_name,
         registrant.last_name,

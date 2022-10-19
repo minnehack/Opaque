@@ -93,6 +93,8 @@
             $($containerCommand ps -a -q --filter ancestor=localhost/mysql:latest))
         $containerCommand run --detach --rm -it -p 3306:3306 localhost/mysql:latest
 
+        mysql --host 127.0.0.1 --user mysql --password=mysql < up.sql
+
         export DATABASE_URL=mysql://mysql:mysql@127.0.0.1/mh_reg
         '';
     };

@@ -17,19 +17,25 @@
 
 use rocket::data::Capped;
 use rocket::fs::TempFile;
+use rocket::form::Form;
 
-#[derive(sqlx::FromRow)]
+use rocket_db_pools::sqlx::FromRow;
+
+// will this let us automatically encode DbRegistrant as something to be sent to the db?
+// use rocket_db_pools::sqlx::Type;
+
+#[derive(FromRow)]
 pub struct DbRegistrant {
     pub email: String,
     pub first_name: String,
     pub last_name: String,
     pub gender: String,
-    pub phone: i64,
+    pub phone: u64,
     pub country: String,
     pub school: String,
     pub level_of_study: String,
     pub minor: bool,
-    pub age: i64,
+    pub age: u64,
     pub tshirt: String,
     pub driving: bool,
     pub reimbursement: bool,
@@ -40,17 +46,43 @@ pub struct DbRegistrant {
     pub dietary_restrictions: Option<String>,
 }
 
+// Form<T> dereferences into &T or &mut T, so we don't need a separate impl for that
+impl From<&Registrant<'_>> for DbRegistrant {
+    fn from(registrant: &Registrant<'_>) -> Self {
+        DbRegistrant {
+            email: registrant.email.to_string(),
+            first_name: registrant.first_name.to_string(),
+            last_name: registrant.last_name.to_string(),
+            gender: registrant.gender.to_string(),
+            phone: registrant.phone,
+            country: registrant.country.to_string(),
+            school: registrant.school.to_string(),
+            level_of_study: registrant.level_of_study.to_string(),
+            minor: registrant.age < 18,
+            age: registrant.age,
+            tshirt: registrant.tshirt.to_string(),
+            driving: registrant.driving,
+            reimbursement: registrant.reimbursement,
+            reimbursement_amount: registrant.reimbursement_amount,
+            reimbursement_desc: registrant.reimbursement_desc.map(|str| str.to_string()),
+            reimbursement_strict: registrant.reimbursement_strict,
+            accommodations: registrant.accommodations.map(|str| str.to_string()),
+            dietary_restrictions: registrant.dietary_restrictions.map(|str| str.to_string()),
+        }
+    }
+}
+
 #[derive(FromForm)]
 pub struct Registrant<'a> {
     pub email: &'a str,
     pub first_name: &'a str,
     pub last_name: &'a str,
     pub gender: &'a str,
-    pub phone: i64,
+    pub phone: u64,
     pub country: &'a str,
     pub school: &'a str,
     pub level_of_study: &'a str,
-    pub age: i64,
+    pub age: u64,
     pub tshirt: &'a str,
     pub driving: bool,
     pub reimbursement: bool,
