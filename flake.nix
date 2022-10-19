@@ -15,21 +15,16 @@
           copyToRoot = pkgs.buildEnv {
             name = "image-root";
             paths = [
-              pkgs.dockerTools.usrBinEnv
-              pkgs.dockerTools.binSh
-              # pkgs.dockerTools.caCertificates
-              pkgs.dockerTools.fakeNss
               pkgs.gnused
               pkgs.hostname
               pkgs.mysql
-              pkgs.bash
-              pkgs.coreutils
             ];
-            pathsToLink = [ "/bin" ];
+            pathsToLink = [ "/bin" "/share" ];
           };
 
           runAsRoot = ''
             #!${pkgs.runtimeShell}
+
             ${pkgs.dockerTools.shadowSetup}
 
             groupadd -r mysql
@@ -47,7 +42,7 @@
             hostname 127.0.0.1
             printf '%s\n' '127.0.0.1' localhost >> /etc/hosts
 
-            mysql_install_db --user=mysql --ldata=/var/lib/mysql --basedir="${pkgs.mysql}"
+            mysql_install_db --user=mysql --ldata=/var/lib/mysql
 
             printf '%s\n%s\n%s\n' 'CREATE DATABASE mh_reg;' \
                                   "GRANT ALL ON mh_reg.* to 'mysql'@'%' IDENTIFIED BY 'mysql';" \
@@ -93,7 +88,7 @@
             $($containerCommand ps -a -q --filter ancestor=localhost/mysql:latest))
         $containerCommand run --detach --rm -it -p 3306:3306 localhost/mysql:latest
 
-        mysql --host 127.0.0.1 --user mysql --password=mysql < up.sql
+        mysql --host=127.0.0.1 --user=mysql --password=mysql < up.sql
 
         export DATABASE_URL=mysql://mysql:mysql@127.0.0.1/mh_reg
         '';
