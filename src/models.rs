@@ -15,37 +15,11 @@
 * along with Opaque.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::schema::registrants;
 use rocket::data::Capped;
 use rocket::fs::TempFile;
 
-#[derive(Insertable)]
-#[table_name = "registrants"]
-pub struct InsertableRegistrant {
-    pub email: String,
-    pub first_name: String,
-    pub last_name: String,
-    pub gender: String,
-    pub phone: i64,
-    pub country: String,
-    pub school: String,
-    pub level_of_study: String,
-    pub minor: bool,
-    pub age: i64,
-    pub tshirt: String,
-    pub driving: bool,
-    pub reimbursement: bool,
-    pub reimbursement_amount: Option<i64>,
-    pub reimbursement_desc: Option<String>,
-    pub reimbursement_strict: Option<bool>,
-    pub accommodations: Option<String>,
-    pub dietary_restrictions: Option<String>,
-}
-
-#[derive(Queryable, QueryableByName)]
-#[table_name = "registrants"]
-pub struct QueryableRegistrant {
-    pub db_identifier: i64,
+#[derive(sqlx::FromRow)]
+pub struct DbRegistrant {
     pub email: String,
     pub first_name: String,
     pub last_name: String,

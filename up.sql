@@ -1,3 +1,5 @@
+use mh_reg;
+
 -- Your SQL goes here
 CREATE TABLE registrants (
 
@@ -7,7 +9,7 @@ CREATE TABLE registrants (
 
     -- Fields that may be NULL are explicitly marked here
 
-    db_identifier BIGINT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     email VARCHAR (100) NOT NULL,
     first_name VARCHAR (100) NOT NULL,
     last_name VARCHAR (100) NOT NULL,
@@ -30,13 +32,3 @@ CREATE TABLE registrants (
     -- dietary restrictions may be NULL
     dietary_restrictions TEXT
 );
-
-INSERT INTO registrants
-    (email, first_name, last_name, gender, phone, country,
-        school, level_of_study, minor, age, tshirt, driving, reimbursement,
-        reimbursement_amount, reimbursement_desc, reimbursement_strict,
-        accommodations, dietary_restrictions)
-    VALUES
-    ('test@example.com', 'John', 'Doe', 'Male', '1234567891', 'USA',
-        'University of Minnesota', 'Undergraduate', FALSE, 21, 'S', FALSE,
-        FALSE, null, null, null, null, null);

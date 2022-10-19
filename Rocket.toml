@@ -1,5 +1,5 @@
-[global.databases]
-mh_reg = { url = "mysql://mysql:mysql@127.0.0.1/mh_reg" }
+[default.databases.mh_reg]
+url = "mysql://mysql:mysql@127.0.0.1/mh_reg"
 
 [default]
 limits = { file = "101MiB" }

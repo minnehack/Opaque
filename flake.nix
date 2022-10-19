@@ -52,7 +52,6 @@
             printf '%s\n%s\n%s\n' 'CREATE DATABASE mh_reg;' \
                                   "GRANT ALL ON mh_reg.* to 'mysql'@'%' IDENTIFIED BY 'mysql';" \
                                   'FLUSH PRIVILEGES;' > /init.sql
-
             chown mysql:mysql /init.sql
           '';
           
@@ -80,11 +79,21 @@
         pkgs.rustfmt
       ];
       shellHook = ''
-        export DATABASE_URL=mysql://minnehack:minnehack@localhost/mh_reg_test
-        podman load < ${mysqlEnv}
-		podman container rm $(podman container stop \
-			$(podman ps -a -q --filter ancestor=localhost/mysql:latest))
-        podman run --detach --rm -it -p 3306:3306 localhost/mysql:latest
+        if command -v podman; then
+          containerCommand=podman
+        elif command -v docker; then
+          containerCommand=docker
+        else
+          printf '%s\n' 'Install Podman or Docker to continue.'
+          exit 1
+        fi
+
+        $containerCommand load < ${mysqlEnv}
+        $containerCommand container rm $($containerCommand container stop \
+            $($containerCommand ps -a -q --filter ancestor=localhost/mysql:latest))
+        $containerCommand run --detach --rm -it -p 3306:3306 localhost/mysql:latest
+
+        export DATABASE_URL=mysql://mysql:mysql@127.0.0.1/mh_reg
         '';
     };
   });
