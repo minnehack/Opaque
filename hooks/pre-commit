@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit".
+
+printf '%s\n' 'Running pre-commit checks!'
+
+if ! cargo sqlx prepare --check > /dev/null 2>&1; then
+    printf '%s\n%s\n' \
+        '`cargo sqlx prepare --check` returned nonzero.' \
+        'Try rerunning `cargo sqlx prepare`!'
+    exit 1
+fi
+
+printf '%s\n' 'All checks succeeded!'
