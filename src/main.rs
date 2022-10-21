@@ -21,7 +21,6 @@ pub mod models;
 extern crate rocket;
 
 use std::env;
-use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
 use std::path::PathBuf;
@@ -137,7 +136,9 @@ fn rocket() -> _ {
 
     data_dir_path.push(data_dir);
 
-    fs::create_dir_all(data_dir).expect("Could not create storage directory!");
+    if !data_dir_path.exists() {
+        panic!("{}: no such file or directory", data_dir);
+    }
 
     rocket::build()
         .attach(Db::init())

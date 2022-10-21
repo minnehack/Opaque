@@ -69,31 +69,58 @@
       in {
         options.services.opaque = {
           enable = lib.mkEnableOption "Opaque server";
+
           port = lib.mkOption {
             type = lib.types.int;
             default = 8000;
           };
+
           address = lib.mkOption {
             type = lib.types.str;
             default = "0.0.0.0";
           };
+
+          user = lib.mkOption {
+            type = lib.types.str;
+            default = "opaque";
+          };
+
+          group = lib.mkOption {
+            type = lib.types.str;
+            default = "opaque";
+          };
+
           limits = lib.mkOption {
             type = lib.types.str;
             default = ''{ file = "101MiB" }'';
           };
+
           dataDir = lib.mkOption {
             type = lib.types.str;
             default = "/var/lib/opaque";
           };
+
           database = lib.mkOption {
             type = lib.types.str;
           };
         };
 
         config = lib.mkIf cfg.enable {
+          users = {
+            users.opaque = {
+              group = "${cfg.group}";
+              isSystemUser = true;
+            };
+            groups.opaque = {};
+          };
+
           systemd.services.opaque = {
             wantedBy = [ "multi-user.target" ];
+            serviceConfig.User = "${cfg.user}";
+            serviceConfig.RuntimeDirectory = "${cfg.dataDir}";
+            serviceConfig.ExecStartPre = "+${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDir}";
             serviceConfig.ExecStart = "${packages.default}/bin/opaque";
+            serviceConfig.Restart = "always";
             serviceConfig.Environment = [
               # use single quotes here to not conflict with toml syntax for
               # strings
@@ -121,9 +148,7 @@
       #
       # could also set this in directly the shell hook if wanted, but i would
       # rather the logic be contained in that script
-      shellHook = ''
-        source ./flake-scripts/shellHook.sh ${mysqlEnv}
-        '';
+      shellHook = ''source ./flake-scripts/shellHook.sh ${mysqlEnv}'';
     };
   });
 }
