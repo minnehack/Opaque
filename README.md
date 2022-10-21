@@ -44,7 +44,7 @@ run it:
 `mysql -h <domain> -u <user> -p < up.sql`
 
 Opaque comes with several configuration options-- the only one you'll
-usually need to set is `services.opaque.database`:
+generally need to set is `services.opaque.database`.
 
 - `services.opaque.enable`
 
