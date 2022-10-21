@@ -63,6 +63,28 @@
       cargoLock.lockFile = ./Cargo.lock;
       nativeBuildInputs = [ pkgs.libmysqlclient.dev ];
     };
+    nixosModules.default = ({ config, lib, pkgs, ... }:
+      let
+        cfg = config.services.opaque;
+      in {
+        options.services.opaque = {
+          enable = lib.mkEnableOption "Opaque server";
+          configFile = lib.mkOption {
+            type = lib.types.path;
+          };
+          dataDir = lib.mkOption {
+            type = lib.types.path;
+            default = /var/lib/opaque;
+          };
+        };
+
+        config = lib.mkIf cfg.enable {
+          systemd.services.opaque = {
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig.ExecStart = "${pkgs.opaque}/bin/opaque";
+          };
+        };
+      });
     devShells.default = pkgs.mkShell {
       buildInputs = [
         pkgs.rustc
@@ -74,25 +96,7 @@
         pkgs.rustfmt
       ];
       shellHook = ''
-        if command -v podman; then
-          containerCommand=podman
-        elif command -v docker; then
-          containerCommand=docker
-        else
-          printf '%s\n' 'Install Podman or Docker to continue.'
-          exit 1
-        fi
-
-        $containerCommand load < ${mysqlEnv}
-        $containerCommand container rm $($containerCommand container stop \
-            $($containerCommand ps -a -q --filter ancestor=localhost/mysql:latest))
-        $containerCommand run --detach --rm -it -p 3306:3306 localhost/mysql:latest
-
-        mysql --host=127.0.0.1 --user=mysql --password=mysql < up.sql
-
-        export DATABASE_URL=mysql://mysql:mysql@127.0.0.1/mh_reg
-
-        ln -sf $(pwd)/hooks/pre-commit $(pwd)/.git/hooks/pre-commit
+        source flake-scripts/shellHook.sh ${mysqlEnv}
         '';
     };
   });
