@@ -95,8 +95,13 @@
         pkgs.mysql
         pkgs.rustfmt
       ];
+      # source instead of running it normally here since it needs to export
+      # an environment variable
+      #
+      # could also set this in directly the shell hook if wanted, but i would
+      # rather the logic be contained in that script
       shellHook = ''
-        source flake-scripts/shellHook.sh ${mysqlEnv}
+        source ./flake-scripts/shellHook.sh ${mysqlEnv}
         '';
     };
   });
