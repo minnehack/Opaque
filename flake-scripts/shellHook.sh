@@ -30,3 +30,9 @@ fi
 export DATABASE_URL='mysql://mysql:mysql@127.0.0.1/mh_reg'
 
 ln -sf "$(pwd)/hooks/pre-commit" "$(pwd)/.git/hooks/pre-commit"
+
+export ROCKET_PORT="8000"
+export ROCKET_ADDRESS="0.0.0.0"
+export ROCKET_LIMITS='{ file = 101MiB }'
+export ROCKET_DATABASES='{ mh_reg = { url = "mysql://mysql:mysql@127.0.0.1/mh_reg" } }'
+export OPAQUE_DATA_DIR='storage'

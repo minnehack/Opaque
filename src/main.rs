@@ -20,30 +20,37 @@ pub mod models;
 #[macro_use]
 extern crate rocket;
 
+use std::env;
 use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
+use std::path::PathBuf;
 
 use rocket::data::Capped;
+use rocket::fairing::AdHoc;
 use rocket::form::Form;
 use rocket::fs::TempFile;
 use rocket::response::status::BadRequest;
 use rocket::response::Redirect;
+use rocket::State;
 
 use crate::models::Registrant;
 
 use rocket_db_pools::sqlx::{self, Row};
 use rocket_db_pools::{Connection, Database};
 
+struct DataDir(PathBuf);
+
 #[derive(Database)]
 #[database("mh_reg")]
 struct Db(sqlx::MySqlPool);
 
 #[post("/api/register", data = "<registrant>")]
-async fn register(
+async fn register<'a>(
     mut db: Connection<Db>,
+    data_dir: &'_ State<DataDir>,
     mut registrant: Form<Registrant<'_>>,
-) -> Result<Redirect, BadRequest<&str>> {
+) -> Result<Redirect, BadRequest<&'a str>> {
     let identifier: u64 = sqlx::query!(
         r#"
         INSERT INTO registrants
@@ -95,16 +102,20 @@ async fn register(
     .try_get(0)
     .map_err(|_| BadRequest(Some("Database error 1")))?;
 
-    upload_file(&mut registrant.resume, identifier)
+    upload_file(&mut registrant.resume, identifier, data_dir.0.clone())
         .await
         .map(|_| Redirect::found("/register-success"))
         .map_err(|_| BadRequest(Some("Error uploading file")))
 }
 
-async fn upload_file(stream: &mut Capped<TempFile<'_>>, identifier: u64) -> std::io::Result<()> {
+async fn upload_file(
+    stream: &mut Capped<TempFile<'_>>,
+    identifier: u64,
+    data_dir: PathBuf,
+) -> std::io::Result<()> {
     if stream.is_complete() && stream.len() > 0 {
         stream
-            .persist_to(String::from("storage/") + &identifier.to_string())
+            .persist_to(data_dir.join(&identifier.to_string()))
             .await?;
         Ok(())
     } else if stream.is_complete() {
@@ -119,12 +130,20 @@ async fn upload_file(stream: &mut Capped<TempFile<'_>>, identifier: u64) -> std:
 
 #[launch]
 fn rocket() -> _ {
-    match fs::create_dir_all("storage") {
-        Ok(()) => (),
-        Err(_) => panic!("Could not create storage directory!"),
-    };
+    let data_dir: &String =
+        &env::var("OPAQUE_DATA_DIR").expect("No storage directory configured: set OPAQUE_DATA_DIR");
+
+    let mut data_dir_path = PathBuf::new();
+
+    data_dir_path.push(data_dir);
+
+    fs::create_dir_all(data_dir).expect("Could not create storage directory!");
 
     rocket::build()
         .attach(Db::init())
+        .attach(AdHoc::on_ignite(
+            "Data directory",
+            move |rocket| async move { rocket.manage(DataDir(data_dir_path)) },
+        ))
         .mount("/", routes![register])
 }

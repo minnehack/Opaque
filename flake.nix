@@ -55,7 +55,7 @@
             Cmd = [ "/bin/mysqld" "--init-file=/init.sql" ];
           };
       };
-  in {
+  in rec {
     packages.default = pkgs.rustPlatform.buildRustPackage {
       pname = "Opaque";
       version = "0.1.0";
@@ -69,19 +69,40 @@
       in {
         options.services.opaque = {
           enable = lib.mkEnableOption "Opaque server";
-          configFile = lib.mkOption {
-            type = lib.types.path;
+          port = lib.mkOption {
+            type = lib.types.int;
+            default = 8000;
+          };
+          address = lib.mkOption {
+            type = lib.types.str;
+            default = "0.0.0.0";
+          };
+          limits = lib.mkOption {
+            type = lib.types.str;
+            default = ''{ file = "101MiB" }'';
           };
           dataDir = lib.mkOption {
-            type = lib.types.path;
-            default = /var/lib/opaque;
+            type = lib.types.str;
+            default = "/var/lib/opaque";
+          };
+          database = lib.mkOption {
+            type = lib.types.str;
           };
         };
 
         config = lib.mkIf cfg.enable {
           systemd.services.opaque = {
             wantedBy = [ "multi-user.target" ];
-            serviceConfig.ExecStart = "${pkgs.opaque}/bin/opaque";
+            serviceConfig.ExecStart = "${packages.default}/bin/opaque";
+            serviceConfig.Environment = [
+              # use single quotes here to not conflict with toml syntax for
+              # strings
+              "ROCKET_PORT='${builtins.toString cfg.port}'"
+              "ROCKET_ADDRESS='${cfg.address}'"
+              "ROCKET_LIMITS='${cfg.limits}'"
+              "ROCKET_DATABASES='${cfg.database}'"
+              "OPAQUE_DATA_DIR='${cfg.dataDir}'"
+            ];
           };
         };
       });
