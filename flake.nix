@@ -72,7 +72,7 @@
 
           port = lib.mkOption {
             type = lib.types.int;
-            default = 8000;
+            default = 8001;
           };
 
           address = lib.mkOption {
