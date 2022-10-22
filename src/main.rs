@@ -15,15 +15,13 @@
 * along with Opaque.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod models;
-
-#[macro_use]
-extern crate rocket;
-
 use std::env;
 use std::io::Error;
 use std::io::ErrorKind;
 use std::path::PathBuf;
+
+#[macro_use]
+extern crate rocket;
 
 use rocket::data::Capped;
 use rocket::fairing::AdHoc;
@@ -33,10 +31,12 @@ use rocket::response::status::BadRequest;
 use rocket::response::Redirect;
 use rocket::State;
 
-use crate::models::Registrant;
-
 use rocket_db_pools::sqlx::{self, Row};
 use rocket_db_pools::{Connection, Database};
+
+pub mod models;
+
+use crate::models::Registrant;
 
 struct DataDir(PathBuf);
 
@@ -46,8 +46,8 @@ struct Db(sqlx::MySqlPool);
 
 #[post("/api/register", data = "<registrant>")]
 async fn register<'a>(
-    mut db: Connection<Db>,
     data_dir: &'_ State<DataDir>,
+    mut db: Connection<Db>,
     mut registrant: Form<Registrant<'_>>,
 ) -> Result<Redirect, BadRequest<&'a str>> {
     let identifier: u64 = sqlx::query!(
@@ -101,13 +101,13 @@ async fn register<'a>(
     .try_get(0)
     .map_err(|_| BadRequest(Some("Database error 1")))?;
 
-    upload_file(&mut registrant.resume, identifier, data_dir.0.clone())
+    persist_file(&mut registrant.resume, identifier, data_dir.0.clone())
         .await
         .map(|_| Redirect::found("/register-success"))
         .map_err(|_| BadRequest(Some("Error uploading file")))
 }
 
-async fn upload_file(
+async fn persist_file(
     stream: &mut Capped<TempFile<'_>>,
     identifier: u64,
     data_dir: PathBuf,
@@ -129,22 +129,18 @@ async fn upload_file(
 
 #[launch]
 fn rocket() -> _ {
-    let data_dir: &String =
-        &env::var("OPAQUE_DATA_DIR").expect("No storage directory configured: set OPAQUE_DATA_DIR");
+    let data_dir = PathBuf::from(
+        env::var("OPAQUE_DATA_DIR").expect("No storage directory configured: set OPAQUE_DATA_DIR"),
+    );
 
-    let mut data_dir_path = PathBuf::new();
-
-    data_dir_path.push(data_dir);
-
-    if !data_dir_path.exists() {
-        panic!("{}: no such file or directory", data_dir);
+    if !data_dir.exists() {
+        panic!("{}: no such file or directory", data_dir.display());
     }
 
     rocket::build()
         .attach(Db::init())
-        .attach(AdHoc::on_ignite(
-            "Data directory",
-            move |rocket| async move { rocket.manage(DataDir(data_dir_path)) },
-        ))
+        .attach(AdHoc::on_ignite("Data directory", |rocket| async {
+            rocket.manage(DataDir(data_dir))
+        }))
         .mount("/", routes![register])
 }
