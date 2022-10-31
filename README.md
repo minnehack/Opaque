@@ -36,12 +36,12 @@ list. A minimal example:
 }
 ```
 
-You'll need to run [up.sql](./migrations/up.sql) from this repository on your database
+You'll need to run [init.sql](./migrations/init.sql) from this repository on your database
 before you run opaque, in order to set up the schema. Change the first line
 of that file to use the desired database (`mh_reg` in the example), then
 run it:
 
-`mysql -h <domain> -u <user> -p < up.sql`
+`mysql -h <domain> -u <user> -p < init.sql`
 
 Opaque comes with several configuration options-- the only one you'll
 generally need to set is `services.opaque.database`.
