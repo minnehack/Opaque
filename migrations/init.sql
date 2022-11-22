@@ -22,6 +22,7 @@ CREATE TABLE registrants (
     age BIGINT UNSIGNED NOT NULL,
     tshirt VARCHAR (100) NOT NULL,
     driving BOOLEAN NOT NULL,
+    discord_tag VARCHAR (100),
     reimbursement BOOLEAN NOT NULL,
     -- the reimbursement fields may be NULL
     reimbursement_amount BIGINT UNSIGNED,
