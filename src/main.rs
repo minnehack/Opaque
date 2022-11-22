@@ -65,6 +65,7 @@ async fn register<'a>(
              age,
              tshirt,
              driving,
+	     discord_tag,
              reimbursement,
              reimbursement_amount,
              reimbursement_desc,
@@ -72,7 +73,7 @@ async fn register<'a>(
              accommodations,
              dietary_restrictions)
         VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING
             id
         "#,
@@ -88,6 +89,7 @@ async fn register<'a>(
         registrant.age,
         registrant.tshirt,
         registrant.driving,
+        registrant.discord_tag,
         registrant.reimbursement,
         registrant.reimbursement_amount,
         registrant.reimbursement_desc,

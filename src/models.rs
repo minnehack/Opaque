@@ -43,6 +43,7 @@ pub struct DbRegistrant {
     pub reimbursement_strict: Option<bool>,
     pub accommodations: Option<String>,
     pub dietary_restrictions: Option<String>,
+    pub discord_tag: Option<String>,
 }
 
 // Form<T> dereferences into &T or &mut T, so we don't need a separate impl for that
@@ -67,6 +68,7 @@ impl From<&Registrant<'_>> for DbRegistrant {
             reimbursement_strict: registrant.reimbursement_strict,
             accommodations: registrant.accommodations.map(|str| str.to_string()),
             dietary_restrictions: registrant.dietary_restrictions.map(|str| str.to_string()),
+	    discord_tag: registrant.discord_tag.map(|str| str.to_string()),
         }
     }
 }
@@ -100,4 +102,5 @@ pub struct Registrant<'a> {
     pub coc: bool,
     #[field(validate = eq(true))]
     pub covidack: bool,
+    pub discord_tag: Option<&'a str>,
 }
