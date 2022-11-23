@@ -1,13 +1,13 @@
 {
   "db": "MySQL",
-  "06cd78bc8ad7db2b42056e99e954d86a62696c235e019c2c4161be1dfb6e6d10": {
+  "0292fbd93de3cafa362feeecebe9a1caa5f6202116b32b0529401e949bbf8618": {
     "describe": {
       "columns": [],
       "nullable": [],
       "parameters": {
-        "Right": 18
+        "Right": 19
       }
     },
-    "query": "\n        INSERT INTO registrants\n            (email,\n             first_name,\n             last_name,\n             gender,\n             phone,\n             country,\n             school,\n             level_of_study,\n             minor,\n             age,\n             tshirt,\n             driving,\n             reimbursement,\n             reimbursement_amount,\n             reimbursement_desc,\n             reimbursement_strict,\n             accommodations,\n             dietary_restrictions)\n        VALUES\n            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n        RETURNING\n            id\n        "
+    "query": "\n        INSERT INTO registrants\n            (email,\n             first_name,\n             last_name,\n             gender,\n             phone,\n             country,\n             school,\n             level_of_study,\n             minor,\n             age,\n             tshirt,\n             driving,\n             discord_tag,\n             reimbursement,\n             reimbursement_amount,\n             reimbursement_desc,\n             reimbursement_strict,\n             accommodations,\n             dietary_restrictions)\n        VALUES\n            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n        RETURNING\n            id\n        "
   }
 }

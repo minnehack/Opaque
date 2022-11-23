@@ -65,7 +65,7 @@ async fn register<'a>(
              age,
              tshirt,
              driving,
-	     discord_tag,
+             discord_tag,
              reimbursement,
              reimbursement_amount,
              reimbursement_desc,

@@ -21,7 +21,9 @@ if ! printf '%s\n' 'exit' | \
         exit 1
     fi
 
-    mysql --host=127.0.0.1 --user=mysql --password=mysql < up.sql
+    sleep 4
+
+    mysql --host=127.0.0.1 --user=mysql --password=mysql < migrations/init.sql
 
 else
     printf 'MySQL server found at 127.0.0.1:3306\n'
