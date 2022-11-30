@@ -49,7 +49,7 @@ async fn register<'a>(
     data_dir: &'_ State<DataDir>,
     mut db: Connection<Db>,
     mut registrant: Form<Registrant<'_>>,
-) -> Result<Redirect, BadRequest<&'a str>> {
+) -> Result<Redirect, BadRequest<String>> {
     let identifier: u64 = sqlx::query!(
         r#"
         INSERT INTO registrants
@@ -99,14 +99,14 @@ async fn register<'a>(
     )
     .fetch_one(&mut *db)
     .await
-    .map_err(|_| BadRequest(Some("Database Error 0")))?
+    .map_err(|err| BadRequest(Some(err.to_string())))?
     .try_get(0)
-    .map_err(|_| BadRequest(Some("Database error 1")))?;
+    .map_err(|err| BadRequest(Some(err.to_string())))?;
 
     persist_file(&mut registrant.resume, identifier, data_dir.0.clone())
         .await
         .map(|_| Redirect::found("/register-success"))
-        .map_err(|_| BadRequest(Some("Error uploading file")))
+        .map_err(|_| BadRequest(Some("Error uploading file".to_string())))
 }
 
 async fn persist_file(
