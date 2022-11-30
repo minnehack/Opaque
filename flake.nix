@@ -117,7 +117,6 @@
           systemd.services.opaque = {
             wantedBy = [ "multi-user.target" ];
             serviceConfig.User = "${cfg.user}";
-            serviceConfig.RuntimeDirectory = "${cfg.dataDir}";
             serviceConfig.ExecStartPre = [
               "+${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDir}"
               "+${pkgs.coreutils}/bin/chown opaque:opaque ${cfg.dataDir}"
